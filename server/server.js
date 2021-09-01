@@ -8,7 +8,17 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) =>
     cb(null, ` ${uuid()}.${mime.extension(file.mimetype)}`),
 });
-const upload = multer({ dest: "uploads" }); // 이미지의 정보를 req 객체에서 뽑아 uploads 폴더에 저장하주는 미들웨어
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (["image/jpeg", "image/png"].includes(file.mimetype)) cb(null, true);
+    // 이미지의 타입이 png혹은 jpeg면 이미지 저장
+    else cb(new Error("invalid type"), false);
+  },
+  limits: {
+    fieldSize: 1024 * 1024 * 5, // 5mb 로 이미지의 용량을 제한
+  },
+}); // 이미지의 정보를 req 객체에서 뽑아 uploads 폴더에 저장하주는 미들웨어
 
 const app = express();
 const PORT = 5000;
