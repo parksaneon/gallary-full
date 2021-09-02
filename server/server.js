@@ -25,8 +25,8 @@ const PORT = 5000;
 
 app.use("/uploads", express.static("uploads"));
 
-// upload.single("imageTest") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
-app.post("/upload", upload.single("imageTest"), (req, res) => {
+// upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
+app.post("/upload", upload.single("image"), (req, res) => {
   console.log(req.file);
   res.json(req.file);
 });
