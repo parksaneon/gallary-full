@@ -21,9 +21,9 @@ const UploadForm = () => {
       const res = await axios.post("/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("success");
+      toast.success("이미지 업로드 성공");
     } catch (error) {
-      toast.error("error");
+      toast.error(error.message);
     }
   };
 
