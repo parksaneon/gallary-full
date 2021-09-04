@@ -4,6 +4,7 @@ const multer = require("multer");
 const { v4: uuid } = require("uuid"); // unique한 아이디 생성
 const mime = require("mime-types"); // req 이미지의 타입 지정
 const mongoose = require("mongoose");
+const Image = require("./models/Image");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "./uploads"),
@@ -37,10 +38,13 @@ mongoose
     app.use("/uploads", express.static("uploads"));
 
     // upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
-    app.post("/upload", upload.single("image"), (req, res) =>
-      res.json(req.file)
-    );
-
+    app.post("/upload", upload.single("image"), async (req, res) => {
+      await new Image({
+        ket: req.file.filename,
+        originalname: req.file.originalname,
+      }).save();
+      res.json(req.file);
+    });
     app.listen(PORT, () => {
       console.log("express server listening on PORT" + PORT);
     });
