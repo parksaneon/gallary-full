@@ -38,12 +38,16 @@ mongoose
     app.use("/uploads", express.static("uploads"));
 
     // upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
-    app.post("/upload", upload.single("image"), async (req, res) => {
-      await new Image({
+    app.post("/images", upload.single("image"), async (req, res) => {
+      const image = await new Image({
         ket: req.file.filename,
         originalname: req.file.originalname,
       }).save();
-      res.json(req.file);
+      res.json(image);
+    });
+    app.get("/images", async (req, res) => {
+      const images = await Image.find();
+      res.json(images);
     });
     app.listen(PORT, () => {
       console.log("express server listening on PORT" + PORT);
