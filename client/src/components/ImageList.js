@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-const ImageList = () => {
-  const [images, setImages] = useState([]);
-  useEffect(() => {
-    axios
-      .get("/images")
-      .then((result) => setImages(result.data))
-      .catch((error) => console.log(error));
-  }, []);
+const ImageList = ({ images }) => {
   const imgList = images.map((image) => (
     <img
       key={image.key}
