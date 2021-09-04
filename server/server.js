@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const { v4: uuid } = require("uuid"); // unique한 아이디 생성
 const mime = require("mime-types"); // req 이미지의 타입 지정
+const mongoose = require("mongoose");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "./uploads"),
@@ -23,11 +24,23 @@ const upload = multer({
 const app = express();
 const PORT = 5000;
 
-app.use("/uploads", express.static("uploads"));
+mongoose
+  .connect(
+    "mongodb+srv://admin:MChE9WUEtBdnWC94@cluster0.4wi81.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    { useCreateIndex: true, useNewUrlParse: true, useUnifiedTopology: true }
+  )
+  .then(() => {
+    console.log("mongoDB connected!");
+    // DB가 연결되면 서버가 실행되도록
+    app.use("/uploads", express.static("uploads"));
 
-// upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
-app.post("/upload", upload.single("image"), (req, res) => res.json(req.file));
+    // upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
+    app.post("/upload", upload.single("image"), (req, res) =>
+      res.json(req.file)
+    );
 
-app.listen(PORT, () => {
-  console.log("express server listening on PORT" + PORT);
-});
+    app.listen(PORT, () => {
+      console.log("express server listening on PORT" + PORT);
+    });
+  })
+  .catch((error) => console.log(error));
