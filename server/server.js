@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const { v4: uuid } = require("uuid"); // unique한 아이디 생성
@@ -25,10 +26,11 @@ const app = express();
 const PORT = 5000;
 
 mongoose
-  .connect(
-    "mongodb+srv://admin:MChE9WUEtBdnWC94@cluster0.4wi81.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useCreateIndex: true, useNewUrlParse: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGO_URI, {
+    useCreateIndex: true,
+    useNewUrlParse: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("mongoDB connected!");
     // DB가 연결되면 서버가 실행되도록
