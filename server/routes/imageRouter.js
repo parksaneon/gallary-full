@@ -11,7 +11,7 @@ imageRouter.post("/images", upload.single("image"), async (req, res) => {
   }).save();
   res.json(image);
 });
-imageRouter.get("/images", async (req, res) => {
+imageRouter.get("/", async (req, res) => {
   const images = await Image.find();
   res.json(images);
 });
