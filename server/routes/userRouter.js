@@ -31,6 +31,7 @@ userRouter.post("/register", async (req, res) => {
 userRouter.patch("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
+    if (!user) throw new Error("가입하지 않은 아이디 입니다.");
     const isValid = await compare(req, body.password, user.hashedPassword);
     if (!isValid) throw new Error("입력하신 정보가 올바르지 않습니다.");
     user.sessions.push({ createAt: new Date() });
@@ -74,5 +75,7 @@ userRouter.get("/me", (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+userRouter.get("/me", (req, res) => {});
 
 module.exports = { userRouter };
