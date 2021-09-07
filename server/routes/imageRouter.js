@@ -5,12 +5,24 @@ const { upload } = require("../middleware/imageUpload");
 
 // upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
 imageRouter.post("/images", upload.single("image"), async (req, res) => {
-  // 유저 정보, public 유무 확인
-  const image = await new Image({
-    key: req.file.filename,
-    originalname: req.file.originalname,
-  }).save();
-  res.json(image);
+  try {
+    if (!req.user) throw new Error("권한이 없습니다.");
+    // 유저 정보, public 유무 확인
+    const image = await new Image({
+      user: {
+        _id: req.user.id,
+        name: req.user.name,
+        username: req.user.username,
+      },
+      public: req.body.public,
+      key: req.file.filename,
+      originalname: req.file.originalname,
+    }).save();
+    res.json(image);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
 });
 
 imageRouter.get("/", async (req, res) => {
