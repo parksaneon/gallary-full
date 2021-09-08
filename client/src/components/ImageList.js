@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { ImageContext } from "../context/ImageContext";
 
 const ImageList = () => {
-  const [images] = useContext(ImageContext);
-  const imgList = images.map((image) => (
+  const { images, myImages, isPublic, setIsPublic } = useContext(ImageContext);
+
+  const imgList = (isPublic ? images : myImages).map((image) => (
     <img
       key={image.key}
       style={{ width: "100%" }}
@@ -11,9 +12,15 @@ const ImageList = () => {
       alt=""
     />
   ));
+
   return (
     <div>
-      <h3>Image List</h3>
+      <h3 style={{ display: "inline-block", marginRight: 10 }}>
+        Image List({isPublic ? "공개" : "개인"}공개 사진)
+      </h3>
+      <button onClick={() => setIsPublic(!isPublic)}>
+        {isPublic ? "개인" : "공개"} + 사진 보기
+      </button>
       {imgList}
     </div>
   );
