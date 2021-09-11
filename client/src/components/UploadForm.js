@@ -39,8 +39,8 @@ const UploadForm = () => {
         },
       });
 
-      if (isPublic) setImages([...images, res.data]);
-      else setMyImages([...myImages, res.data]);
+      if (isPublic) setImages([...images, ...res.data]);
+      else setMyImages([...myImages, ...res.data]);
 
       toast.success("이미지 업로드 성공");
       setTimeout(() => {

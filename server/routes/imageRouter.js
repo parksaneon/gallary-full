@@ -13,17 +13,22 @@ imageRouter.post("/images", upload.array("image", 5), async (req, res) => {
   try {
     if (!req.user) throw new Error("권한이 없습니다.");
     // 유저 정보, public 유무 확인
-    const image = await new Image({
-      user: {
-        _id: req.user.id,
-        name: req.user.name,
-        username: req.user.username,
-      },
-      public: req.body.public,
-      key: req.file.filename,
-      originalname: req.file.originalname,
-    }).save();
-    res.json(image);
+    const images = await Promise.all(
+      req.files.map(async (file) => {
+        const image = await new Image({
+          user: {
+            _id: req.user.id,
+            name: req.user.name,
+            username: req.user.username,
+          },
+          public: req.body.public,
+          key: file.filename,
+          originalname: file.originalname,
+        }).save();
+      })
+    );
+
+    res.json(images);
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error.message });
