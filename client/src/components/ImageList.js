@@ -5,7 +5,8 @@ import { ImageContext } from "../context/ImageContext";
 import "./ImageList.css";
 
 const ImageList = () => {
-  const { images, myImages, isPublic, setIsPublic } = useContext(ImageContext);
+  const { images, myImages, isPublic, setIsPublic, loaderMoreImages } =
+    useContext(ImageContext);
   const [me] = useContext(AuthContext);
   const imgList = (isPublic ? images : myImages).map((image) => (
     <Link key={image.key} to={`/images/${image._id}`}>
@@ -24,6 +25,7 @@ const ImageList = () => {
         </button>
       )}
       <div className="image-list-container"> {imgList}</div>
+      <button onClick={loaderMoreImages}>Load More Images</button>
     </div>
   );
 };

@@ -8,15 +8,16 @@ export const ImageProvider = (prop) => {
   const [images, setImages] = useState([]);
   const [myImages, setMyImages] = useState([]);
   const [isPublic, setIsPublic] = useState(false);
+  const [imageUrl, setImageUrl] = useState("/images");
   const [me] = useContext(AuthContext);
 
   // 처음 로딩했을 때만 실행됨
   useEffect(() => {
     axios
-      .get("/images?lastid=2")
-      .then((result) => setImages(result.data))
+      .get(imageUrl)
+      .then((result) => setImages((prevData) => [...prevData, ...result.data]))
       .catch((error) => console.error(error));
-  }, []);
+  }, [imageUrl]);
 
   // me 의 값이 바뀔때 마다 실행됨
   useEffect(() => {
@@ -33,6 +34,12 @@ export const ImageProvider = (prop) => {
     }
   }, [me]);
 
+  const loaderMoreImages = () => {
+    if (images.length === 0) return;
+    const lastImageId = images[images.length - 1]._id;
+    setImageUrl(`/images?lastid=${lastImageId}`);
+  };
+
   return (
     <ImageContext.Provider
       value={{
@@ -42,6 +49,7 @@ export const ImageProvider = (prop) => {
         setMyImages,
         isPublic,
         setIsPublic,
+        loaderMoreImages,
       }}
     >
       {prop.children}
