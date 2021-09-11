@@ -8,17 +8,17 @@ import { ImageContext } from "../context/ImageContext";
 const UploadForm = () => {
   const { images, setImages, myImages, setMyImages } = useContext(ImageContext);
   const defaultFileName = "이미지 파일을 업로드 해주세요.";
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [fileName, setFileName] = useState(defaultFileName);
   const [percent, setPercent] = useState(0);
   const [isPublic, setIsPublic] = useState(false);
 
   const imageSelectHandler = (e) => {
-    const imageFile = e.target.files[0];
-    setFile(imageFile);
-    setFileName(imageFile.name);
-
+    const imageFiles = e.target.files;
+    setFiles(imageFiles);
+    const imageFile = imageFiles[0];
+    setFileName(imageFiles[0].name);
     const fileReader = new FileReader();
     fileReader.readAsDataURL(imageFile);
     fileReader.onload = (e) => setImgSrc(e.target.result);
@@ -27,7 +27,9 @@ const UploadForm = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("image", file);
+
+    for (let file of files) formData.append("image", file);
+
     formData.append("public", isPublic);
     try {
       const res = await axios.post("/images", formData, {
