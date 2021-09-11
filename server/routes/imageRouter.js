@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const fileUnlink = promisify(fs.unlink);
 
 // upload.single("image") 라는 미들웨어를 사용함으로서 req에서 데이터에 접근이 가능
-imageRouter.post("/images", upload.single("image"), async (req, res) => {
+imageRouter.post("/images", upload.array("image", 5), async (req, res) => {
   try {
     if (!req.user) throw new Error("권한이 없습니다.");
     // 유저 정보, public 유무 확인
