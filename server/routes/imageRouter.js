@@ -37,7 +37,10 @@ imageRouter.post("/images", upload.array("image", 5), async (req, res) => {
 
 imageRouter.get("/", async (req, res) => {
   // public 이미지들만 제공
-  const images = await Image.find({ public: true });
+  const images = await Image.find({
+    public: true,
+    _id: { $gt: req.query.lastid },
+  }).limit(2);
   res.json(images);
 });
 

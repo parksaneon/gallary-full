@@ -13,7 +13,7 @@ export const ImageProvider = (prop) => {
   // 처음 로딩했을 때만 실행됨
   useEffect(() => {
     axios
-      .get("/images")
+      .get("/images?lastid=2")
       .then((result) => setImages(result.data))
       .catch((error) => console.error(error));
   }, []);
