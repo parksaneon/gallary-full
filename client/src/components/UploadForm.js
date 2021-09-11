@@ -67,6 +67,7 @@ const UploadForm = () => {
         <input
           id="image"
           type="file"
+          multiple
           accept="image/*"
           onChange={imageSelectHandler}
         />
